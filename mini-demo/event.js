@@ -21,3 +21,18 @@ Vue.prototype.$once = function(event, fn) {
     vm.$on(event, on)
     return vm
 }
+
+Vue.prototype.$emit = function(event, fn) {
+    const vm = this
+    let cbs = vm[event]
+    if(cbs) {
+        // 将类数组对象转换成数组
+        // 暂时没看到这个类数组对象怎么出来的
+        // cbs = cbs.length > 1 ? toArray(cbs) : cbs
+        // const args = Array.toArray(arguments, 1)
+        for(let i = 0, l = cbs.length; i < l; i++) {
+            cbs[i].apply(vm, args)
+        }
+    }
+    return vm
+}

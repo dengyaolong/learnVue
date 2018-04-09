@@ -6,7 +6,7 @@ Vue.prototype.$on = function(event, fn) {
             this.$on(event[i], fn)
         }
     } else {
-        (vm._events[event] || vm.events[event] = []).push(fn)
+        (vm._events[event] || (vm.events[event]=[])).push(fn)
     }
     return vm
 }
@@ -32,6 +32,22 @@ Vue.prototype.$emit = function(event, fn) {
         // const args = Array.toArray(arguments, 1)
         for(let i = 0, l = cbs.length; i < l; i++) {
             cbs[i].apply(vm, args)
+        }
+    }
+    return vm
+}
+Vue.prototype.$off = function(event, fn) {
+    const vm = this
+    let cbs = vm._events[event];
+    if(!cbs) return vm
+    if(arguments.length === 1) {
+        vm._events[event] = null
+        return vm
+    }
+    for(let i = cbs.length - 1; i >= 0; i--) {
+        if(cbs[i] === fn || cbs[i].fn === fn) {
+            cbs.splice(i, 1)
+            break; // 只删掉一个?
         }
     }
     return vm
